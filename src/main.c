@@ -3,7 +3,15 @@
 int main (int argc,char* argv[]){
 
 
+struct Ass_Lookup{
 
+	
+
+
+
+
+
+}
 //check if no Arguments were given
 if (argc == 1){
 	printf("Error: no Arguments Were given");
@@ -20,20 +28,20 @@ FILE* fhOutput;
 	return 0;
 	};
 
-	//Open output File in Write Mode
-	if ((fhOutput = fopen ("TcBinary.bn", "wb")) == NULL){
-	fprintf(stderr, "Error, Binary file could not be Created");
+	m//open output file in write mode
+	if ((fhoutput = fopen ("tcbinary.bn", "wb")) == null){
+	fprintf(stderr, "error, binary file could not be created");
 	return 0;
 	};
 	
-	int fhI_Index = 0;
-	int fhO_Index = 0;
-	//Input file Indexer, takes filepointer and current input index,Moves to next Whitespace and returns Token and new Index 
-	int InputFile_Indexer (FILE* fhInput,int fhI_Index){
+	int fhi_index = 0;
+	int fho_index = 0;
+	//input file indexer, takes filepointer and current input index,moves to next whitespace and returns token and new index 
+	int inputfile_indexer (file* fhinput,int fhi_index){
 	int i = 0;
+	int isnumber = isnum(fhinput[fhi_index])
+	while (fhinput[fhi_index] )
 	if (fhInput[fhI_Index] !== " "){
-		fprintf(stdout, "Not a Whitespace: %c",fhInput[fhI_Index]);
-		};
+		fprintf(stdout, "Not a Whitespace!");
 	};
-
 };
