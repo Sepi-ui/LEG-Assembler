@@ -1,5 +1,27 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+
+
+int strindex(char* input){
+	int base = 0;
+
+	//check immediate designator "#" if yes skip it
+	if(input[0] == '#'){
+		printf("# was skipped and recognized");
+	base++; };
+
+	int i = 0;
+	//increment i if current pointer is not a whitespace or newline
+	while (input[base+i] != ' ' || input[base+i] != '\n'){
+	i++;
+	};
+	//return i as index for the length
+	return i;
+};
+
+
+
 int main (int argc,char* argv[]){
 
 struct Instruction {
@@ -8,7 +30,7 @@ struct Instruction {
 	};
 
 // example: # instructions[i].instruction # takes instruction out of struct nr i
-struct Instruction instruction[34] = {
+struct Instruction instructions[34] = {
 	
 	//OPCode
 	//NEED TO ADD IMMEDIATE LOGIC
@@ -70,27 +92,40 @@ FILE* fhOutput;
 	//Assembles one line at a time
 	char input[30];
 	fgets(input, 30, fhInput);
+	char* assembly = &input[0];
 	printf("file Contents:\n%s", input);
-	//assemble OPCode
-	int i;
-	//Loop over "Struct Array"
-	for (i = 0,i<34,i++){
-	int index = 0;
-	//compare Struct with input string
-	strcmp(instruction[index].instruction, )
 
-	index++
+	//loop and read one word per Loop
+	int hopper = 0;
+	int strlength = strindex(assembly[hopper]);
+	
+
+
+
+
+
+
+		//assemble OPCode
+		int i;
+		//Loop over every "Struct in Array"
+		for (i = 0;i<34;i++){
+		int index = 0;
+		//compare Struct with input string
+		//strcmp(instructions[index].instruction, )
+
+
+	index++;
 	};
 		
-	
-	;
-	if (input[0]=="#"){
-	//skip Assembly for ARG1 and use direct binaries of input 
+		//assemble Args	
+		
+		if (input[0] == '#'){
+	//skip Assembly for ARG1 and use direct binaries of input
+	//memcpy()
 	};
 
 
-	//input file indexer, takes filepointer and current input index,moves to next whitespace and returns token and new index 
-	//
+
 
 //Close Input File
 fclose(fhInput);
@@ -99,10 +134,3 @@ fclose(fhOutput);
 };
 
 
-int strindex(char* input){
-	int i = 0;
-	if(input[0] == "#"){
-	i++};
-	
-	
-	};
