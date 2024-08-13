@@ -2,35 +2,17 @@
 #include <string.h>
 #include <ctype.h>
 
-
-int strindex(char* input){
-	int base = 0;
-
-	//check immediate designator "#" if yes skip it
-	if(input[0] == '#'){
-		printf("# was skipped and recognized");
-	base++; };
-
-	int i = 0;
-	//increment i if current pointer is not a whitespace or newline
-	while (input[base+i] != ' ' || input[base+i] != '\n'){
-	i++;
-	};
-	//return i as index for the length
-	return i;
-};
-
-
-
-int main (int argc,char* argv[]){
+// example: # instructions[i].instruction # takes instruction out of struct nr i
 
 struct Instruction {
 	char* instruction;
 	int binary;
 	};
 
-// example: # instructions[i].instruction # takes instruction out of struct nr i
-struct Instruction instructions[34] = {
+
+
+	struct Instruction instructions[] = {
+	
 	
 	//OPCode
 	//NEED TO ADD IMMEDIATE LOGIC
@@ -58,6 +40,41 @@ struct Instruction instructions[34] = {
 	{"sram", 8},	{"push", 9},
 	};
 
+int strindex(char* input,int hopper){
+	int base = 0;
+	char buffer[20];
+	char* bufferP = buffer;
+	memcpy(bufferP,input,20);
+	printf("Copied line to strindex for parsing:\n%s\n",buffer);
+	//check immediate designator "#" if yes skip it
+	if(buffer[base] == '#'){
+		printf("# was skipped and recognized\n");
+	base++; };
+	int count = 0;
+	int i = base;
+	//increment i if current pointer is not a whitespace or newline
+	//
+	//
+	while (i<20){
+
+	if (buffer[i] == 10 || buffer[i] == 32){
+
+		printf("done with Parsing\n");
+		//return i as index for the length
+		return count;
+	}else{
+		printf("skipped Character:%c\n",buffer[i]);
+		count++;
+		i++;
+		};
+	};
+};
+
+
+int main (int argc,char* argv[]){
+
+
+
 //check if no Arguments were given
 if (argc == 1){
 	printf("Error: no Arguments Were given");
@@ -70,7 +87,7 @@ FILE* fhOutput;
 
 	//open Input File in Read Mode RETURN if File could no be Opened
 	
-	fhInput = fopen("compileme.ass","r");
+	fhInput = fopen(argv[1],"r");
 
 	if (fhInput == NULL){
 	fprintf(stderr, "Error, No File could be opened");
@@ -90,39 +107,29 @@ FILE* fhOutput;
 
 
 	//Assembles one line at a time
-	char input[30];
-	fgets(input, 30, fhInput);
-	char* assembly = &input[0];
-	printf("file Contents:\n%s", input);
+	char buffer[30];
+	//Get string until newline 
+	fgets(buffer, 30, fhInput);
+	char* assembly = &buffer[0];
+	printf("line Contents:\n%s", buffer);
 
-	//loop and read one word per Loop
+	int i = 0;
+	//hopper shows current line location
 	int hopper = 0;
-	int strlength = strindex(assembly[hopper]);
+	//strlength calls strindex with assembly pointer and hopper as index, returns Length of next Word
+	int strlength = strindex((assembly+hopper),hopper);
+	printf("string reader returned length of: %i\n", strlength);
+	int arrsize = sizeof(struct Instruction);
+	printf("Size of Array is %d\n",arrsize);	
+	while (i<34){
 	
-
-
-
-
-
+	i++;
+	return 0;
+};	
 
 		//assemble OPCode
-		int i;
-		//Loop over every "Struct in Array"
-		for (i = 0;i<34;i++){
-		int index = 0;
-		//compare Struct with input string
-		//strcmp(instructions[index].instruction, )
 
 
-	index++;
-	};
-		
-		//assemble Args	
-		
-		if (input[0] == '#'){
-	//skip Assembly for ARG1 and use direct binaries of input
-	//memcpy()
-	};
 
 
 
