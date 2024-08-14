@@ -116,15 +116,29 @@ FILE* fhOutput;
 	int i = 0;
 	//hopper shows current line location
 	int hopper = 0;
-	//strlength calls strindex with assembly pointer and hopper as index, returns Length of next Word
+	//returns word length 	
 	int strlength = strindex((assembly+hopper),hopper);
 	printf("string reader returned length of: %i\n", strlength);
 	int arrsize = sizeof(struct Instruction);
 	printf("Size of Array is %d\n",arrsize);	
+	//Go through all instructions until match
 	while (i<34){
 	
-	i++;
+	struct Instruction *p = &instructions[i];
+	char* wordloc = (assembly);
+	int compare = memcmp(*p,(assembly+hopper),strlenth);	
+	if(compare == 0){
+	printf("FOUND MATCH AT INDEX:%d\n",i);	
 	return 0;
+	}else{
+	i++;
+	
+};
+
+	
+
+
+
 };	
 
 		//assemble OPCode
