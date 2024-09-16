@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
+#include "../utils/search.h"
 // example: # instructions[i].instruction # takes instruction out of struct nr i
 
-struct Instruction {
+typedef struct Instruction {
 	char* instruction;
 	int binary;
-	};
+	}def_Instruction;
 
 
 
-	struct Instruction instructions[] = {
+	def_Instruction instructions[] = {
 	
 	
 	//OPCode
@@ -40,42 +40,12 @@ struct Instruction {
 	{"sram", 8},	{"push", 9},
 	};
 
-int strindex(char* input,int hopper){
-	int base = 0;
-	char buffer[20];
-	char* bufferP = buffer;
-	memcpy(bufferP,input,20);
-	printf("Copied line to strindex for parsing:\n%s\n",buffer);
-	//check immediate designator "#" if yes skip it
-	if(buffer[base] == '#'){
-		printf("# was skipped and recognized\n");
-	base++; };
-	int count = 0;
-	int i = base;
-	//increment i if current pointer is not a whitespace or newline
-	//
-	//
-	while (i<20){
-
-	if (buffer[i] == 10 || buffer[i] == 32){
-
-		printf("done with Parsing\n");
-		//return i as index for the length
-		return count;
-	}else{
-		printf("skipped Character:%c\n",buffer[i]);
-		count++;
-		i++;
-		};
-	};
-};
-
 
 int main (int argc,char* argv[]){
 
 
 
-//check if no Arguments were given
+//check if no Arguments were given !!!BETTER ERRORCHECKING!!!!
 if (argc == 1){
 	printf("Error: no Arguments Were given");
 	return 0;
@@ -104,38 +74,41 @@ FILE* fhOutput;
 	
 	int fhi_index = 0;
 	int fho_index = 0;
-
-
 	//Assembles one line at a time
 	char buffer[30];
 	//Get string until newline 
 	fgets(buffer, 30, fhInput);
 	char* assembly = &buffer[0];
 	printf("line Contents:\n%s", buffer);
-
+	// INDEX VARIABLE DECLARATION
 	int i = 0;
-	//hopper shows current line location
+	//base = # skipped
+	int base = 0;
+	//hopper = current word location
 	int hopper = 0;
 	//returns word length 	
 	int strlength = strindex((assembly+hopper),hopper);
 	printf("string reader returned length of: %i\n", strlength);
-	int arrsize = sizeof(struct Instruction);
-	printf("Size of Array is %d\n",arrsize);	
+
+	//Check for # and increment base if present
+	if (buffer[hopper+base] == '#'){
+	base++;	
+	printf("base:%d\n",base);
+	};
 	//Go through all instructions until match
-	while (i<34){
+	while (i<35){
 	
-	struct Instruction *p = &instructions[i];
+	def_Instruction *p = &instructions[0];
 	char* wordloc = (assembly);
-	int compare = memcmp(*p,(assembly+hopper),strlenth);	
+	int compare = memcmp((void*)p[i].instruction,&assembly[hopper + base],(strlength));	
+	printf("current Assembly Input:%s\ncurrent struct Location:%s\n",(assembly + hopper),p);
 	if(compare == 0){
 	printf("FOUND MATCH AT INDEX:%d\n",i);	
 	return 0;
 	}else{
+	printf("No Match found! Index is: %d\n",i);
 	i++;
-	
-};
-
-	
+	};
 
 
 
