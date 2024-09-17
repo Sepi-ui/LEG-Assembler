@@ -4,6 +4,35 @@
 #include "../utils/search.h"
 // example: # instructions[i].instruction # takes instruction out of struct nr i
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 typedef struct Instruction {
 	char* instruction;
 	int binary;
@@ -80,7 +109,7 @@ FILE* fhOutput;
 	fgets(buffer, 30, fhInput);
 	char* assembly = &buffer[0];
 	printf("line Contents:\n%s", buffer);
-	// INDEX VARIABLE DECLARATION
+	//index for while Loop, used to jump over structs	
 	int i = 0;
 	//base = # skipped
 	int base = 0;

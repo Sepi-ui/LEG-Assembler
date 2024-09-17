@@ -1,3 +1,4 @@
+#include "search.h"
 int strindex(char* input, int hopper) {
 
 int base = 0;
@@ -19,7 +20,7 @@ while (i<20){
 	};
 }
 
-int compare (void* instruction, char* input, int strlength){
+int compare (void* instruction, char* input, int strlength, int hopper, int base){
 int i = 0;
 while (i<35){
 	int result = memcmp(p[i].instruction, &input[hopper + base], strlength)
@@ -27,4 +28,5 @@ while (i<35){
 		return i;
 		};
 	};
+
 }
