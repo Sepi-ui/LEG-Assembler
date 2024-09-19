@@ -4,35 +4,6 @@
 #include "../utils/search.h"
 // example: # instructions[i].instruction # takes instruction out of struct nr i
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 typedef struct Instruction {
 	char* instruction;
 	int binary;
@@ -124,24 +95,17 @@ FILE* fhOutput;
 	base++;	
 	printf("base:%d\n",base);
 	};
-	//Go through all instructions until match
-	while (i<35){
-	
-	def_Instruction *p = &instructions[0];
-	char* wordloc = (assembly);
-	int compare = memcmp((void*)p[i].instruction,&assembly[hopper + base],(strlength));	
-	printf("current Assembly Input:%s\ncurrent struct Location:%s\n",(assembly + hopper),p);
-	if(compare == 0){
-	printf("FOUND MATCH AT INDEX:%d\n",i);	
-	return 0;
-	}else{
-	printf("No Match found! Index is: %d\n",i);
-	i++;
+	//compare one line
+	int lineloc = 0; 
+	while (lineloc < 5){
+	def_Instruction *instructionP = &instructions[0];
+	int result = compare(instructionP, assembly, strlength, hopper, base);
+		if (result >= 0){
+		printf("result found at index %d\n",i);
+		}else{
+		printf("something went wrong");
+		};
 	};
-
-
-
-};	
 
 		//assemble OPCode
 
