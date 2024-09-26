@@ -1,16 +1,14 @@
+#include <stdio.h>
 #include <string.h>
-
+#include <errno.h>
+#include "instructions.h"
+#include "../utils/error.h"
 int strindex(char* input, int hopper) {
-int base = 0;
-//check immediate designator
-if (hopper[base] == '#') {
-	base++;
-	};
 int count = 0;
-int i = base;
+int i = hopper;
 
 while (i<20){
-	if (hopper[i] == 10 || hopper[i] == 32){
+	if (input[i] == 10 || input[i] == 32){
 		//done with parsing
 		return count;
 		}else{
@@ -18,15 +16,20 @@ while (i<20){
 		i++;
 		};
 	};
+	//error handling for another day
 }
 
-int compare (char* instruction, char* input, int strlength, int hopper, int base){
+int compare (def_Instruction* instruction, char* input, int strlength, int hopper){
 int i = 0;
 while (i<35){
-	int result = memcmp(instruction[i].instruction, &input[hopper + base], strlength);
+	int result = memcmp(instruction[i].instruction, &input[hopper], strlength);
+
 	if (result == 0){
+		printf("found match");
 		return i;
 		};
+	i++;
 	};
+	error_log("tried to compare: '%.*s' with '%s'\n", strlength, &input[hopper], instruction[i].instruction);
 return -1;
 }

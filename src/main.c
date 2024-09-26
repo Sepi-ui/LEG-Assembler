@@ -1,16 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
 #include "../utils/search.h"
-// example: # instructions[i].instruction # takes instruction out of struct nr i
-
-typedef struct Instruction {
-	char* instruction;
-	int binary;
-	}def_Instruction;
-
-
-
+#include "../utils/instructions.h"
+#include "../utils/error.h"
 	def_Instruction instructions[] = {
 	
 	
@@ -41,13 +36,9 @@ typedef struct Instruction {
 	};
 
 
-int main (int argc,char* argv[]){
-
-
-
-//check if no Arguments were given !!!BETTER ERRORCHECKING!!!!
-if (argc == 1){
-	printf("Error: no Arguments Were given");
+int main (int argc,char* argv[]){ 
+if (argc == 1) {
+	error_log("no Arguments were given");
 	return 0;
 	};
 //File Handle input
@@ -60,7 +51,7 @@ FILE* fhOutput;
 	fhInput = fopen(argv[1],"r");
 
 	if (fhInput == NULL){
-	fprintf(stderr, "Error, No File could be opened");
+	error_log("Error, No File could be opened");
 	return 0;
 	};
 	
@@ -68,7 +59,7 @@ FILE* fhOutput;
 
 	//open output file in write mode RETURN if failed
 	if ((fhOutput = fopen ("tcbinary.bn", "wb")) == NULL){
-	fprintf(stderr, "error, binary file could not be created");
+	error_log("error, binary file could not be created");
 	return 0;
 	};
 	
@@ -80,31 +71,32 @@ FILE* fhOutput;
 	fgets(buffer, 30, fhInput);
 	char* assembly = &buffer[0];
 	printf("line Contents:\n%s", buffer);
-	//index for while Loop, used to jump over structs	
-	int i = 0;
-	//base = # skipped
-	int base = 0;
+
+	//compare one line
+	int lineloc = 0; 
+	def_Instruction *instructionP = &instructions[0];
+
 	//hopper = current word location
 	int hopper = 0;
-	//returns word length 	
-	int strlength = strindex((assembly+hopper),hopper);
-	printf("string reader returned length of: %i\n", strlength);
-
+	//base = # skipped
+	int base = 0;
 	//Check for # and increment base if present
 	if (buffer[hopper+base] == '#'){
 	base++;	
-	printf("base:%d\n",base);
 	};
-	//compare one line
-	int lineloc = 0; 
-	while (lineloc < 5){
-	def_Instruction *instructionP = &instructions[0];
-	int result = compare(instructionP, assembly, strlength, hopper, base);
+	hopper = base;
+	while (lineloc < 4){
+	int strlength = strindex(assembly,hopper);
+	int result = compare(instructionP, assembly, strlength, hopper);
+
 		if (result >= 0){
-		printf("result found at index %d\n",i);
+		printf("result found at index %d\n",result);
+		hopper = hopper + strlength + 1;
+		printf("hopper increased:%d\n",strlength);
 		}else{
-		printf("something went wrong");
+		return -1;
 		};
+	lineloc++;
 	};
 
 		//assemble OPCode
