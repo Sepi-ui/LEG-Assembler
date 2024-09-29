@@ -3,9 +3,13 @@
 #include <ctype.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include "../utils/search.h"
 #include "../utils/instructions.h"
 #include "../utils/error.h"
+#include "../utils/flags.h"
+
+#define MAX_LINE_LENGTH 64
 	def_Instruction instructions[] = {
 	
 	
@@ -37,74 +41,114 @@
 
 
 int main (int argc,char* argv[]){ 
-if (argc == 1) {
-	error_log("no Arguments were given");
-	return 0;
-	};
+
 //File Handle input
 FILE* fhInput;
 //File Handle Output
 FILE* fhOutput;
+	
+if (argc == 1) {
+	error_log("no Arguments were given, specify a file to be assembled");
+	return 0;
+	};
+
+	//Flags Handling
+
+
+	def_flags flags;
+	initializeFlags(&flags);
+	parseFlags(argc, argv, &flags);
+	printFlags(&flags);
+	//allocate outputFile array
+	char* outputFile;
+	//Allocate 
+	if (flags.outFile != NULL) {
+	outputFile = malloc(strlen(flags.outFile) + strlen(".bn") + 1);
+	
+	if (outputFile == NULL) {
+		error_log("[ERROR] Memory Allocation for outputFile Failed");
+		return 0;
+		};
+	//copy outFile to outputFIle and add .bn
+	appendExtension(outputFile, flags.outFile);
+	}else{
+	//copy Default to outputFile
+		error_log("[Warning] No Output File Specified, using Default (out.bn)\n");
+		outputFile = malloc(strlen("out.bn") + 1);
+		if (outputFile == NULL) {
+		error_log("[ERROR] Memory Allocation for outputFile Failed");
+		return 0;
+		};
+		outputFile = "out.bn";
+		};
+	
+
+
+	//open output file in write mode RETURN if failed
+	if (outputFile != NULL) {
+	fhOutput = fopen(outputFile, "wb");
+	};
+	if(fhOutput == NULL) {
+	error_log("[ERROR] Output File could not be Opened");
+	return 1;
+	};
+
 
 	//open Input File in Read Mode RETURN if File could no be Opened
-	
-	fhInput = fopen(argv[1],"r");
-
+	if (flags.inFile[0] != NULL) {
+	fhInput = fopen(flags.inFile[0],"r");
+	}else{
+	error_log("no Input File was Specified");
+	};
+	//check if file was opened
 	if (fhInput == NULL){
 	error_log("Error, No File could be opened");
 	return 0;
 	};
-	
-	
+	printf("file was opened");	
 
-	//open output file in write mode RETURN if failed
-	if ((fhOutput = fopen ("tcbinary.bn", "wb")) == NULL){
-	error_log("error, binary file could not be created");
-	return 0;
-	};
-	
+
 	int fhi_index = 0;
 	int fho_index = 0;
-	//Assembles one line at a time
-	char buffer[30];
-	//Get string until newline 
-	fgets(buffer, 30, fhInput);
-	char* assembly = &buffer[0];
-	printf("line Contents:\n%s", buffer);
 
-	//compare one line
-	int lineloc = 0; 
-	def_Instruction *instructionP = &instructions[0];
+	char* line;
+	//Assemble one Line at a time
+	while ((line = readNextLine(fhInput)) != NULL){
 
-	//hopper = current word location
-	int hopper = 0;
-	//base = # skipped
-	int base = 0;
-	//Check for # and increment base if present
-	if (buffer[hopper+base] == '#'){
-	base++;	
-	};
-	hopper = base;
-	while (lineloc < 4){
-	int strlength = strindex(assembly,hopper);
-	int result = compare(instructionP, assembly, strlength, hopper);
+		//compare one line
+		int lineloc = 0; 
+		def_Instruction *instructionP = &instructions[0];
 
-		if (result >= 0){
-		printf("result found at index %d\n",result);
-		hopper = hopper + strlength + 1;
-		printf("hopper increased:%d\n",strlength);
-		}else{
-		return -1;
+		//hopper = current word location
+		int hopper = 0;
+		while (lineloc < 4){
+			int strlength = strindex(line,hopper);
+			//Check if token starts with a number
+			if (line[hopper] >=48 && line[hopper]  <= 57){
+			//handle immediate
+		
+				hopper = hopper + strlength + 1;
+			}else{
+				int result = compare(instructionP, line, strlength, hopper);
+
+				if (result >= 0){
+					printf("result found at index %d\n",result);
+					hopper = hopper + strlength + 1;
+					printf("hopper increased:%d\n",strlength);
+				}else{
+				return -1;
+				};
+			};
+		lineloc++;
 		};
-	lineloc++;
 	};
-
 		//assemble OPCode
 
 
 
 
 
+free(outputFile);
 
 //Close Input File
 fclose(fhInput);
