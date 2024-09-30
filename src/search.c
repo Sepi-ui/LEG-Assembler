@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include "instructions.h"
-#include "../utils/error.h"
+#include "../include/instructions.h"
+#include "../include/error.h"
 
 #define MAX_LINE_LENGTH 64
 int strindex(char* input, int hopper) {
@@ -42,17 +42,25 @@ if (outFile == NULL || outputFile == NULL){
 	error_log("[ERROR] NULL Pointer passed to appendExtension");
 	return;
 	};
-int i = 0, j = 0;
-while (outFile[i] != '\0') {
-	outputFile[i] = outFile[i];
+int i = 0, j = 0, k = 0;
+//prepend "output/" to outputFile
+char outputDir[] = "output/";
+while (outputDir[i] != '\0') {
+	outputFile [i] = outputDir[i];
 	i++;
+	};
+//copy input Name to outputFile
+while (outFile[j] != '\0') {
+	outputFile[j] = outFile[j];
+	i++;
+	j++;
 	};
 	printf("outfFile copied to outputFile");
 char extension[] = ".bn";
-while (extension[j] != '\0'){
-	outputFile[i] = extension[j];
+while (extension[k] != '\0'){
+	outputFile[i] = extension[k];
 	i++;
-	j++;
+	k++;
 };
 outputFile[i] = '\0';
 }

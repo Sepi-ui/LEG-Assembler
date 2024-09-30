@@ -4,10 +4,10 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "../utils/search.h"
-#include "../utils/instructions.h"
-#include "../utils/error.h"
-#include "../utils/flags.h"
+#include "../include/search.h"
+#include "../include/instructions.h"
+#include "../include/error.h"
+#include "../include/flags.h"
 
 #define MAX_LINE_LENGTH 64
 	def_Instruction instructions[] = {
@@ -63,7 +63,7 @@ if (argc == 1) {
 	char* outputFile;
 	//Allocate 
 	if (flags.outFile != NULL) {
-	outputFile = malloc(strlen(flags.outFile) + strlen(".bn") + 1);
+	outputFile = malloc(strlen("output/") + strlen(flags.outFile) + strlen(".bn") + 1);
 	
 	if (outputFile == NULL) {
 		error_log("[ERROR] Memory Allocation for outputFile Failed");
@@ -74,12 +74,12 @@ if (argc == 1) {
 	}else{
 	//copy Default to outputFile
 		error_log("[Warning] No Output File Specified, using Default (out.bn)\n");
-		outputFile = malloc(strlen("out.bn") + 1);
+		outputFile = malloc(strlen("output/out.bn") + 1);
 		if (outputFile == NULL) {
 		error_log("[ERROR] Memory Allocation for outputFile Failed");
 		return 0;
 		};
-		outputFile = "out.bn";
+		outputFile = "output/out.bn";
 		};
 	
 
