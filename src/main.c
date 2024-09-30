@@ -125,14 +125,16 @@ if (argc == 1) {
 			int strlength = strindex(line,hopper);
 			//Check if token starts with a number
 			if (line[hopper] >=48 && line[hopper]  <= 57){
-			//handle immediate
-		
+			//handle immediate Writing Here
+				printf("immediate was Written\n");
 				hopper = hopper + strlength + 1;
 			}else{
 				int result = compare(instructionP, line, strlength, hopper);
 
 				if (result >= 0){
 					printf("result found at index %d\n",result);
+
+					//Writing Logic Here
 					hopper = hopper + strlength + 1;
 					printf("hopper increased:%d\n",strlength);
 				}else{
