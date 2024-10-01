@@ -2,7 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include "../include/instructions.h"
-#include "../include/error.h"
+#include "../include/log.h"
 
 #define MAX_LINE_LENGTH 64
 int strindex(char* input, int hopper) {

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "../include/search.h"
 #include "../include/instructions.h"
-#include "../include/error.h"
+#include "../include/log.h"
 #include "../include/flags.h"
 
 #define MAX_LINE_LENGTH 64
@@ -144,6 +144,9 @@ if (argc == 1) {
 		lineloc++;
 		};
 	};
+	if (line = readNextLine(fhInput) == NULL) {
+		printf("File is finnished reading");
+		};
 		//assemble OPCode
 
 

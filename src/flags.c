@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../include/flags.h"
-#include "../include/error.h"
+#include "../include/log.h"
 void initializeFlags(def_flags* flags) {
 	flags->outFile = NULL;
 	flags->flagB = 0;
