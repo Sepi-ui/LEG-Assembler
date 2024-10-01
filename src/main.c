@@ -42,14 +42,22 @@
 
 int main (int argc,char* argv[]){ 
 
+initializeLogStream();
+
+setLogStream(LOG_FATAL, stderr);
+setLogStream(LOG_ERROR, stderr);
+setLogStream(LOG_INFO, stdout);
+
+info_log("Log initialization Completed\n");
+
 //File Handle input
 FILE* fhInput;
 //File Handle Output
 FILE* fhOutput;
 	
 if (argc == 1) {
-	error_log("no Arguments were given, specify a file to be assembled");
-	return 0;
+	fatal_log("no Arguments were given, specify a file to be assembled\n");
+	return 1;
 	};
 
 	//Flags Handling
@@ -66,18 +74,18 @@ if (argc == 1) {
 	outputFile = malloc(strlen("output/") + strlen(flags.outFile) + strlen(".bn") + 1);
 	
 	if (outputFile == NULL) {
-		error_log("[ERROR] Memory Allocation for outputFile Failed");
-		return 0;
+		fatal_log("Memory Allocation for outputFile Failed\n");
+		return 1;
 		};
 	//copy outFile to outputFIle and add .bn
 	appendExtension(outputFile, flags.outFile);
 	}else{
 	//copy Default to outputFile
-		error_log("[Warning] No Output File Specified, using Default (out.bn)\n");
+		error_log("No Output File Specified, trying to use Default (out.bn)\n");
 		outputFile = malloc(strlen("output/out.bn") + 1);
 		if (outputFile == NULL) {
-		error_log("[ERROR] Memory Allocation for outputFile Failed");
-		return 0;
+		fatal_log("Memory Allocation for outputFile Failed\n");
+		return 1;
 		};
 		outputFile = "output/out.bn";
 		};
@@ -89,7 +97,7 @@ if (argc == 1) {
 	fhOutput = fopen(outputFile, "wb");
 	};
 	if(fhOutput == NULL) {
-	error_log("[ERROR] Output File could not be Opened");
+	fatal_log("Output File could not be Opened");
 	return 1;
 	};
 
@@ -98,14 +106,14 @@ if (argc == 1) {
 	if (flags.inFile[0] != NULL) {
 	fhInput = fopen(flags.inFile[0],"r");
 	}else{
-	error_log("no Input File was Specified");
+	fatal_log("no Input File was Specified");
+	return 1;
 	};
 	//check if file was opened
 	if (fhInput == NULL){
-	error_log("Error, No File could be opened");
-	return 0;
+	fatal_log("No File could be opened");
+	return 1;
 	};
-	printf("file was opened");	
 
 
 	int fhi_index = 0;
@@ -126,17 +134,17 @@ if (argc == 1) {
 			//Check if token starts with a number
 			if (line[hopper] >=48 && line[hopper]  <= 57){
 			//handle immediate Writing Here
-				printf("immediate was Written\n");
+				info_log("immediate was Written\n");
 				hopper = hopper + strlength + 1;
 			}else{
 				int result = compare(instructionP, line, strlength, hopper);
 
 				if (result >= 0){
-					printf("result found at index %d\n",result);
+					info_log("result found at index %d\n",result);
 
 					//Writing Logic Here
 					hopper = hopper + strlength + 1;
-					printf("hopper increased:%d\n",strlength);
+					info_log("hopper increased:%d\n",strlength);
 				}else{
 				return -1;
 				};
@@ -145,7 +153,7 @@ if (argc == 1) {
 		};
 	};
 	if (line = readNextLine(fhInput) == NULL) {
-		printf("File is finnished reading");
+		info_log("File is finnished reading");
 		};
 		//assemble OPCode
 

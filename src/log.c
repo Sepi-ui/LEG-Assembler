@@ -4,84 +4,83 @@
 #include <stdarg.h>
 #include "log.h"
 
-void error_log(const char* format, ...){
-	va_list Eargs;
-	va_start(Eargs, format);
+static FILE* log_stream[LOG_COUNT];
 
-	//print Error Messages
-	vfprintf(stderr, format, Eargs);
-	if (errno != 0){
-	fprintf(stderr, ": %s\n", strerror(errno));	
-		};
-	va_end(Eargs);
+
+void setLogStream(LogType type, FILE* stream) {
+if (type < LOG_COUNT) {
+	log_stream[type] = stream;
+	
 	}
+}
 
-void warning_log(const char* format, ...){
-	va_list Wargs;
-	va_start(Wargs, format);
-
-	//Print Warning Message
-	vfprintf(stderr, format, Wargs);
-	if (errno != 0){
-		fprintf(stderr, ": %s\n", strerror(errno));
+void initializeLogStream() {
+FILE* null_stream = fopen("/dev/null", "w");
+if (null_stream) {
+	for (int i = 0; i< LOG_COUNT; i++) {
+		setLogStream((LogType)i, null_stream);
+		printf("Type nr:%d was initialized\n", i);
 		};
-	va_end(Wargs);
 	}
-
-
-void debug_log(const char* format, ...){
-	va_list Dargs;
-	va_start(Dargs, format);
-
-	//Print Warning Message
-	vfprintf(stderr, format, Dargs);
-	if (errno != 0){
-		fprintf(stderr, ": %s\n", strerror(errno));
+}
+void log_message(FILE* stream, const char* logType, const char* format, va_list args){
+	fprintf(stream, "%s", logType); //Print Log Type
+	vfprintf(stream, format, args); //Print Message
+	if (errno != 0) {//Check errno and print string if !0
+		fprintf(stream, ": %s\n", strerror(errno));
+		}else{
+		fprintf(stream, "\n");
 		};
-	va_end(Dargs);
-	}
+}
+
+void fatal_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_FATAL], "[FATAL]", format, args);
+va_end(args);
+}
 
 
-void trace_log(const char* format, ...){
-	va_list Targs;
-	va_start(Targs, format);
-
-	//Print Warning Message
-	vfprintf(stderr, format, Targs);
-	if (errno != 0){
-		fprintf(stderr, ": %s\n", strerror(errno));
-		};
-	va_end(Targs);
-	}
+void error_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_ERROR], "[ERROR]", format, args);
+va_end(args);
+}
 
 
-void info_log(const char* format, ...){
-	va_list Largs;
-	va_start(Largs, format);
-
-	//Print Warning Message
-	vfprintf(stderr, format, Largs);
-	if (errno != 0){
-		fprintf(stderr, ": %s\n", strerror(errno));
-		};
-	va_end(Largs);
-	}
+void warning_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_WARNING], "[WARNING]", format, args);
+va_end(args);
+}
 
 
-void performance_log(const char* format, ...){
-	va_list Pargs;
-	va_start(Pargs, format);
+void debug_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_DEBUG], "[DEBUG]", format, args);
+va_end(args);
+}
 
-	//Print Warning Message
-	vfprintf(stderr, format, Pargs);
-	if (errno != 0){
-		fprintf(stderr, ": %s\n", strerror(errno));
-		};
-	va_end(Pargs);
-	}
+void trace_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_TRACE], "[TRACE]", format, args);
+va_end(args);
+}
 
+void info_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_INFO], "[INFO]", format, args);
+va_end(args);
+}
 
-
-
-
-
+void performance_log(const char* format, ...) {
+va_list args;
+va_start(args, format);
+log_message(log_stream[LOG_PERFORMANCE], "[PERFORMANCE]", format, args);
+va_end(args);
+}
